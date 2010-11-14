@@ -1,4 +1,7 @@
-#source("/Users/fhines/Documents/RSwift.R")
+# The very early dirty beginnings of RSwift 
+# TODO: everything
+# PRESENT: Authentication, Getting Acccount/Container/Object Info, Retrieving a file. 
+#source("/Users/fhines/Documents/RSwift/RSwift.R")
 library("RCurl")
 
 authurl <- c("http://cftest.blackopscode.com:11000/v1.0")
@@ -13,7 +16,7 @@ PerformAuth <- function() {
   storage.token <<- result.headers[1,"X-Storage-Token"]
   storage.auth <<- result.headers[1,"X-Auth-Token"]
   
-  #need to find trycatch/exception handling
+  #need exception handling
   if(exists("storage.url")) {
   	return(TRUE)
   } else {
@@ -29,7 +32,7 @@ GetAccountInfo <- function() {
   account.bytes.used <<- result.headers[1,"X-Account-Bytes-Used"]
   account.container.count <<- result.headers[1,"X-Account-Container-Count"]
   
-  #need to find trycatch/exception handling
+  #need exception handling
   if(exists("account.bytes.used")) {
   	return(TRUE)
   } else {
@@ -77,7 +80,7 @@ GetObjectInfo <-function(container, object, debug=FALSE) {
   }
 }
 
-#need to use getURLContent
+#using getURLContent with BINARY=NA for now
 GetObject <-function(container, object, debug=FALSE) {
   rhdr <- basicTextGatherer()
   h <- getCurlHandle()
