@@ -1,8 +1,10 @@
 ### The beginning's of R API Binding's for the Openstack Swift object storage.
+### Includes some functionallity specific to Rackspace CloudFiles (CDN Operations).
 ### TODO: everything, should start by renaming functions. 
 ### PRESENT: Authentication, Getting Acccount/Container/Object Info, 
-### Retrieving a file, Getting CDN Container listing. CDN Enabling a container
-### Enabling CDN log retention.
+###	Retrieving a file
+### RACKSPACE CLOUDFILES SPECIFIC: Getting CDN Container listing.
+###	CDN Enabling a container, Enabling CDN log retention.
  
 ### Sample usage ###
 
