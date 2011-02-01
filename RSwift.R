@@ -7,9 +7,9 @@
 library("RCurl")
 library("rjson")
 
-authurl <- c("http://cftest.blackopscode.com:11000/v1.0")
-xstorageuser <- c("test:tester")
-xstoragepass <- c("testing")
+authurl <- c("https://auth.api.rackspacecloud.com/v1.0")
+xstorageuser <- c("testuser")
+xstoragepass <- c("sUp3rSekritApiKeyGoesHere")
 
 PerformAuth <- function() {
   rhdr <- basicTextGatherer()
