@@ -8,6 +8,7 @@
 
 source("/Users/fhines/Documents/RSwift/RSwift.R")
 
+# set your user and apikey
 > xstorageuser <- c("testuser")
 > xstoragepass <- c("sUp3rSekritApiKeyGoesHere")
 
@@ -20,7 +21,7 @@ source("/Users/fhines/Documents/RSwift/RSwift.R")
 "https://storage101.dfw1.clouddrive.com/v1/MossoCloudFS_9e7f94e2-ff60-47a6-89ae-42cf2d68ecc0" 
 > storage.auth
                           X-Auth-Token 
-"8d3bdafa-48da-448e-b39c-0586ced6025b" 
+"8d3bdafa-48da-448e-b39c-1586ced6025b" 
 > cdn.mgmturl
                                                               X-CDN-Management-Url 
 "https://cdn1.clouddrive.com/v1/MossoCloudFS_9e7f94e2-ff60-47a6-89ae-42cf2d68ecc0" 
