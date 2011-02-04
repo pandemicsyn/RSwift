@@ -1,7 +1,8 @@
 # The very early dirty beginnings of RSwift 
-# TODO: everything
+# TODO: everything, close connections
 # PRESENT: Authentication, Getting Acccount/Container/Object Info, 
-# Creating & Deleting a container.
+# Creating & Deleting a container
+# Beginnings of Object Listing.
 # Retrieving a file, Getting CDN Container listing. CDN Enabling a container
 # Enabling CDN log retention. 
 #source("/Users/fhines/Documents/RSwift/RSwift.R")
@@ -124,16 +125,16 @@ GetCDNContainers <- function() {
   uri <- c("/?format=json")
   rhdr <- basicTextGatherer()
   h <- getCurlHandle()
-  url <- paste(storage.url, uri, sep="")
+  url <- paste(cdn.mgmturl, uri, sep="")
   result <- getURL(url, httpheader=c(storage.auth), header=TRUE, headerfunction=rhdr$update, customrequest="GET", curl=h, nobody=FALSE)
   result.headers <- read.dcf(textConnection(paste(rhdr$value(NULL)[-1], collapse="")))
-  account.object.count <<- result.headers[1,"X-Account-Object-Count"]
-  account.bytes.used <<- result.headers[1,"X-Account-Bytes-Used"]
-  account.container.count <<- result.headers[1,"X-Account-Container-Count"]
   jdata <- fromJSON(strsplit(result, "\r\n\r\n")[[1]][2])
   cdn.containers <<- data.frame(jdata)
   #need exception handling
-  if(exists("account.bytes.used")) {
+  if(getCurlInfo(h)$response.code == 200) {
+  	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 204) {
+  	print("204 No CDN Enabled Containers")
   	return(TRUE)
   } else {
   	return(FALSE)
