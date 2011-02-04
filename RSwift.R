@@ -1,6 +1,7 @@
 # The very early dirty beginnings of RSwift 
 # TODO: everything
 # PRESENT: Authentication, Getting Acccount/Container/Object Info, 
+# Creating & Deleting a container.
 # Retrieving a file, Getting CDN Container listing. CDN Enabling a container
 # Enabling CDN log retention. 
 #source("/Users/fhines/Documents/RSwift/RSwift.R")
@@ -40,6 +41,80 @@ GetAccountInfo <- function() {
   if(exists("account.bytes.used")) {
   	return(TRUE)
   } else {
+  	return(FALSE)
+  }
+}
+
+CreateContainer <- function(container, debug=FALSE) {
+  rhdr <- basicTextGatherer()
+  h <- getCurlHandle()
+  url <- paste(storage.url, container, sep="")
+  result <- getURL(url, httpheader=c(storage.auth), header=TRUE, headerfunction=rhdr$update, customrequest="PUT", curl=h, nobody=TRUE, verbose=debug)
+  result.headers <- read.dcf(textConnection(paste(rhdr$value(NULL)[-1], collapse="")))
+  if (getCurlInfo(h)$response.code == 201) {
+	print(result.headers)
+	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 202) {
+  	print("202 Accepted")
+  	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 404) {
+  	print("404 Container Not Found")
+  	return(FALSE)
+  } else {
+  	print(paste("Request failed, encountered:", getCurlInfo(h)$response.code))
+  	print(result)
+  	return(FALSE)	
+  }	
+}
+
+DeleteContainer <- function(container, debug=FALSE) {
+  rhdr <- basicTextGatherer()
+  h <- getCurlHandle()
+  url <- paste(storage.url, container, sep="")
+  result <- getURL(url, httpheader=c(storage.auth), header=TRUE, headerfunction=rhdr$update, customrequest="DELETE", curl=h, nobody=TRUE, verbose=debug)
+  result.headers <- read.dcf(textConnection(paste(rhdr$value(NULL)[-1], collapse="")))
+  if (getCurlInfo(h)$response.code == 204) {
+	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 404) {
+  	print("404 Container Not Found")
+  	return(FALSE)
+  } else {
+  	print(paste("Request failed, encountered:", getCurlInfo(h)$response.code))
+  	print(result)
+  	return(FALSE)	
+  }	
+}
+
+ListObjects <- function(container, limit=NA, prefix=NA, marker=NA, debug=FALSE) {
+  args <- c("/?format=json")
+  if (is.na(marker)) {
+  		print(marker)
+  }
+  if (is.na(limit)) {
+  		print(marker)
+  }
+  if (is.na(prefix)) {
+  		print(marker)
+  }
+  uri <- paste(container, args, sep="")
+  rhdr <- basicTextGatherer()
+  h <- getCurlHandle()
+  url <- paste(storage.url, uri, sep="")
+  result <- getURL(url, httpheader=c(storage.auth), header=TRUE, headerfunction=rhdr$update, customrequest="GET", curl=h, nobody=FALSE)
+  result.headers <- read.dcf(textConnection(paste(rhdr$value(NULL)[-1], collapse="")))
+  jdata <- fromJSON(strsplit(result, "\r\n\r\n")[[1]][2])
+  container.listing <<- data.frame(jdata)
+  if (getCurlInfo(h)$response.code == 200) { 
+	print(result)
+	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 204) {
+  	print("204 Container Empty")
+  	return(TRUE)
+  } else if (getCurlInfo(h)$response.code == 404) {
+  	print("404 Container Not Found")
+  	return(FALSE)
+  } else {
+  	print(paste("Request failed, encountered:", getCurlInfo(h)$response.code))
   	return(FALSE)
   }
 }
